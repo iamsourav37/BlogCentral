@@ -1,6 +1,7 @@
 ﻿using BlogCentral.Web.Models.Data;
 using BlogCentral.Web.Models.Domain;
 using BlogCentral.Web.Models.DTO;
+using BlogCentral.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogCentral.Web.Areas.Admin.Controllers
@@ -8,14 +9,14 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
     [Area("Admin")]
     public class TagController : Controller
     {
-        private readonly BlogCentralDBContext _dbContext;
-        public TagController(BlogCentralDBContext blogCentralDBContext)
+        private ITagRepository _tagRepository;
+        public TagController(ITagRepository _tagRepository)
         {
-            this._dbContext = blogCentralDBContext;
+            this._tagRepository = _tagRepository;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var allTags = this._dbContext.Tags.ToList();
+            var allTags = await _tagRepository.GetAllAsync();
             return View(allTags);
         }
 
@@ -25,7 +26,7 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(TagRequest tagRequest)
+        public async Task<IActionResult> Add(TagRequest tagRequest)
         {
 
             if (!ModelState.IsValid)
@@ -33,21 +34,20 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
                 return View();
             }
 
-            Tag newTag = new Tag() { Name = tagRequest.Name, DisplayName = tagRequest.DisplayName };
-            this._dbContext.Tags.Add(newTag);
-            this._dbContext.SaveChanges();
+
+            await _tagRepository.AddTagAsync(tagRequest);
 
             return RedirectToAction("Index");
         }
 
-        public IActionResult Edit(Guid? tagId)
+        public async Task<IActionResult> Edit(Guid? tagId)
         {
 
             if (tagId == null)
             {
                 return NotFound();
             }
-            var returnedTag = this._dbContext.Tags.Find(tagId);
+            var returnedTag = await this._tagRepository.GetByIdAsync(tagId);
             if (returnedTag == null)
             {
                 return NotFound();
@@ -57,9 +57,8 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(TagUpdateRequest tagUpdateRequest)
+        public async Task<IActionResult> Edit(TagUpdateRequest tagUpdateRequest)
         {
-
             if (tagUpdateRequest == null)
             {
                 return NotFound();
@@ -70,28 +69,17 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-
-            Tag tag = new Tag() { Id = tagUpdateRequest.Id, Name = tagUpdateRequest.Name, DisplayName = tagUpdateRequest.DisplayName };
-
-            this._dbContext.Update(tag);
-            this._dbContext.SaveChanges();
+            await this._tagRepository.UpdateTagAsync(tagUpdateRequest);
             return RedirectToAction("Index");
         }
 
-        public IActionResult Delete(Guid? tagId)
+        public async Task<IActionResult> Delete(Guid? tagId)
         {
             if (tagId == null)
             {
                 return BadRequest();
             }
-            var tagToBeDelete = this._dbContext.Tags.Find(tagId);
-            if (tagToBeDelete == null)
-            {
-                return BadRequest();
-            }
-
-            this._dbContext.Tags.Remove(tagToBeDelete);
-            this._dbContext.SaveChanges();
+            await this._tagRepository.DeleteTagAsync(tagId);
             return RedirectToAction("Index");
         }
     }

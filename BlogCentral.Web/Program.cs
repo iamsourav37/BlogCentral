@@ -1,7 +1,12 @@
 using BlogCentral.Web.Models.Data;
+using BlogCentral.Web.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+// Injecting the services
+builder.Services.AddScoped<ITagRepository, TagRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -25,10 +30,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "MyArea",
     pattern: "{area=Public}/{controller=Home}/{action=Index}/{id?}");
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
 app.Run();
