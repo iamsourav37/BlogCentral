@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Injecting the services
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -1,0 +1,92 @@
+﻿@model BlogCentral.Web.Models.DTO.BlogPostRequest
+@{
+
+    ViewBag.Title = "Create New Blog";
+}
+
+
+<div class="container">
+
+
+    <div>
+        <a asp-controller="BlogPost" asp-action="Index" class="btn btn-outline-dark">Back to Blog Post List</a>
+        <form asp-area="Admin" asp-controller="BlogPost" asp-action="Add">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row mt-3 p-3 border ">
+                <div class="row pb-2 mb-3">
+                    <h2 class="text-secondary">Create New blog Post</h2>
+                    <hr />
+                </div>
+                <div class="mb-4 row">
+                    <label asp-for="Heading"></label>
+                    <input asp-for="Heading" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="Heading" class="text-danger"></span>
+                </div>
+                <div class="mb-4 row">
+                    <label asp-for="PageTitle"></label>
+                    <input asp-for="PageTitle" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="PageTitle" class="text-danger"></span>
+                </div>
+                <div class="mb-4 row">
+                    <label asp-for="Content"></label>
+                    <textarea asp-for="Content" class="form-control rounded-3 text-info"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4 row">
+                    <label asp-for="ShortDescription"></label>
+                    <input asp-for="ShortDescription" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4 row">
+                    <label asp-for="FeaturedImageUrl"></label>
+                    <input asp-for="FeaturedImageUrl" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4 row">
+                    <label asp-for="UrlHandle"></label>
+                    <input asp-for="UrlHandle" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="UrlHandle" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4 row">
+                    <label asp-for="Author"></label>
+                    <input asp-for="Author" class="form-control rounded-3 text-info" />
+                    <span asp-validation-for="Author" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4 row">
+                    <label for="tags" class="form-label">Tags</label>
+                    <select id="tags" asp-for="SelectedTags" multiple class="form-control">
+
+                        @foreach (var tag in Model.AvailableTags)
+                        {
+                            if (tag.Text.ToLower().Contains(".net"))
+                            {
+                                <option value="@tag.Value" selected>@tag.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@tag.Value">@tag.Text</option>
+                            }
+                        }
+
+                    </select>
+                </div>
+
+
+                <div class="form-check form-switch mb-4 row mx-md-3">
+                    <input class="form-check-input" type="checkbox" id="IsVisible" value="true" name="@nameof(Model.IsVisible)">
+                    <label class="form-check-label" for="IsVisible">Enable Public Visibility</label>
+                </div>
+
+                <div class="mb-4 row">
+                    <button type="submit" class="btn btn-dark rounded-4" style="width:250px;">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

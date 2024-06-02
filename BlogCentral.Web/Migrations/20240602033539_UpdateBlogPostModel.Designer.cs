@@ -4,6 +4,7 @@ using BlogCentral.Web.Models.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogCentral.Web.Migrations
 {
     [DbContext(typeof(BlogCentralDBContext))]
-    partial class BlogCentralDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240602033539_UpdateBlogPostModel")]
+    partial class UpdateBlogPostModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

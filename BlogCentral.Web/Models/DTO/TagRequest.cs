@@ -10,7 +10,7 @@ namespace BlogCentral.Web.Models.DTO
 
         [Required]
         [MaxLength(30)]
-        [MinLength(2)]
+        [MinLength(2, ErrorMessage ="Enter atleast 2 character")]
         public string Name { get; set; }
 
         [Required]

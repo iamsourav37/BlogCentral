@@ -1,0 +1,40 @@
+﻿@model List<BlogCentral.Web.Models.DTO.BlogPostResponse>
+@{
+    ViewBag.Title = "Admin Blog Post Page";
+}
+
+
+<div class="container bg-opacity-50">
+    <div>
+        <a asp-area="Admin" asp-controller="BlogPost" asp-action="Add" class="btn btn-outline-dark">
+            <i class="bi bi-plus-circle"></i> Create New Blog Post
+        </a>
+        <table class="table p-3 mt-1">
+            <thead>
+                <tr>
+                    <th scope="col">Heading</th>
+                    <th scope="col">Page Title</th>
+                    <th scope="col">Visibility</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                @foreach (var blogPost in Model)
+                {
+                    <tr>
+                        <th>@blogPost.Heading</th>
+                        <td>@blogPost.PageTitle</td>
+                        <td>@blogPost.IsVisible</td>
+                        <td><a asp-controller="BlogPost" asp-action="Edit" asp-route-tagId="@blogPost.Id" class="btn btn-outline-warning">Edit</a></td>
+                            <td><a class="btn btn-outline-danger" asp-controller="BlogPost" asp-action="Delete" asp-route-tagId="@blogPost.Id">Delete</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+
+</div>
+
