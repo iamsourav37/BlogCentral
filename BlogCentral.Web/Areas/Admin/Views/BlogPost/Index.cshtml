@@ -15,6 +15,7 @@
                     <th scope="col">Heading</th>
                     <th scope="col">Page Title</th>
                     <th scope="col">Visibility</th>
+                    <th scope="col">Tags</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
                 </tr>
@@ -26,8 +27,16 @@
                         <th>@blogPost.Heading</th>
                         <td>@blogPost.PageTitle</td>
                         <td>@blogPost.IsVisible</td>
-                        <td><a asp-controller="BlogPost" asp-action="Edit" asp-route-tagId="@blogPost.Id" class="btn btn-outline-warning">Edit</a></td>
-                            <td><a class="btn btn-outline-danger" asp-controller="BlogPost" asp-action="Delete" asp-route-tagId="@blogPost.Id">Delete</a></td>
+                        <td>
+                            <div class="d-flex">
+                                @foreach (var tag in blogPost.Tags)
+                                {
+                                    <span class="badge bg-secondary m-1">@tag.DisplayName</span>
+                                }
+                            </div>
+                        </td>
+                        <td><a asp-controller="BlogPost" asp-action="Edit" asp-route-blogPostId="@blogPost.Id" class="btn btn-outline-warning">Edit</a></td>
+                        <td><a class="btn btn-outline-danger" asp-controller="BlogPost" asp-action="Delete" asp-route-blogPostId="@blogPost.Id">Delete</a></td>
                     </tr>
                 }
             </tbody>

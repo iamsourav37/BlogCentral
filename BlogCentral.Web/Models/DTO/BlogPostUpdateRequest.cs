@@ -14,6 +14,7 @@ namespace BlogCentral.Web.Models.DTO
         public string? UrlHandle { get; set; }
         public string? Author { get; set; }
         public bool? IsVisible { get; set; }
-        public IEnumerable<Guid> Tags { get; set; }
+        public IEnumerable<SelectListItem>? AvailableTags { get; set; }
+        public IEnumerable<Guid>? SelectedTags { get; set; }
     }
 }
