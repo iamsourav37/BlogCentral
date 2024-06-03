@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Injecting the services
 builder.Services.AddScoped<ITagRepository, TagRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<IImageRepository, CloudinaryImageRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
