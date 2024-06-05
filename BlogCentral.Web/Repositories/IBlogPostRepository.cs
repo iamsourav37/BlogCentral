@@ -6,6 +6,7 @@ namespace BlogCentral.Web.Repositories
     {
         Task<IEnumerable<BlogPostResponse>> GetAllBlogPostAsync();
         Task<BlogPostResponse> GetBlogPostByIdAsync(Guid? id);
+        Task<BlogPostResponse> GetBlogPostByUrlHandle(string? urlHandle);
         Task AddBlogPostAsync(BlogPostRequest blogPostRequest);
         Task UpdateBlogPostAsync(BlogPostUpdateRequest blogPostUpdateRequest);
         Task DeleteBlogPostAsync(Guid? id);

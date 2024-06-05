@@ -1,6 +1,8 @@
 ﻿@model BlogCentral.Web.Models.DTO.BlogPostUpdateRequest
 @{
     ViewBag.Title = "Edit Blog Post";
+    var apiBaseUrl = Url.Content("~/api/images");
+
 }
 
 
@@ -38,10 +40,13 @@
                     <input asp-for="ShortDescription" class="form-control rounded-3 text-info" />
                     <span asp-validation-for="ShortDescription" class="text-danger"></span>
                 </div>
-
+                <div class="mb-4 row">
+                    <input class="form-control" type="file" id="imageUpload">
+                    @*<span id="imageUpload" class="text-danger"></span>*@
+                </div>
                 <div class="mb-4 row">
                     <label asp-for="FeaturedImageUrl"></label>
-                    <input asp-for="FeaturedImageUrl" class="form-control rounded-3 text-info" />
+                    <input asp-for="FeaturedImageUrl" class="form-control rounded-3 text-info" readonly />
                     <span asp-validation-for="FeaturedImageUrl" class="text-danger"></span>
                 </div>
 
@@ -94,6 +99,34 @@
 
 @section Scripts{
     <script>
-        var editor = new FroalaEditor('#Content');
+    var editor = new FroalaEditor('#Content');
+
+    console.log("hello world");
+
+    var imageUploadElement = document.getElementById("imageUpload");
+    var featuredImageUrl = document.getElementById("FeaturedImageUrl");
+    var featuredImageDisplay = document.getElementById("featuredImageDisplay");
+
+    async function uploadFeaturedImage(e) {
+        var formData = new FormData();
+        formData.append('file', e.target.files[0]);
+
+        await fetch('@apiBaseUrl', {
+            method: 'post',
+            body: formData,
+            headers: {
+                'Accept': '*/*'
+            }
+        })
+            .then(response => response.json())
+            .then(result => {
+                featuredImageUrl.value = result.imageUrl;
+                featuredImageDisplay.src = result.imageUrl;
+                featuredImageDisplay.style.display = 'block';
+            }
+            );
+    }
+
+    imageUploadElement.addEventListener('change', uploadFeaturedImage);
     </script>
 }

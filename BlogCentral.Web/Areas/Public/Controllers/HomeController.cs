@@ -1,4 +1,5 @@
 using BlogCentral.Web.Models;
+using BlogCentral.Web.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -9,15 +10,22 @@ namespace BlogCentral.Web.Areas.Public.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IBlogPostRepository _blogPostRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBlogPostRepository blogPostRepository, ITagRepository tagRepository)
         {
             _logger = logger;
+            this._blogPostRepository = blogPostRepository;
+            this._tagRepository = tagRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var allBlogs = await _blogPostRepository.GetAllBlogPostAsync();
+            var allTags = await _tagRepository.GetAllAsync();
+            ViewBag.allTags = allTags;
+            return View(allBlogs);
         }
 
         public IActionResult Privacy()

@@ -72,6 +72,7 @@ namespace BlogCentral.Web.Repositories
                 PageTitle = blogPost.PageTitle,
                 PublishedDate = blogPost.PublishedDate,
                 ShortDescription = blogPost.ShortDescription,
+                UrlHandle = blogPost.UrlHandle,
                 Tags = blogPost.Tags.Select(tag => new TagResponse() { Id = tag.Id, DisplayName = tag.DisplayName, Name = tag.Name }),
 
 
@@ -83,6 +84,26 @@ namespace BlogCentral.Web.Repositories
         public async Task<BlogPostResponse> GetBlogPostByIdAsync(Guid? id)
         {
             var blogPost = await this._blogCentralDBContext.BlogPosts.Include(blgPost => blgPost.Tags).FirstOrDefaultAsync(blogPost => blogPost.Id == id);
+            var blogPostResponse = new BlogPostResponse()
+            {
+                Id = blogPost.Id,
+                Author = blogPost.Author,
+                Content = blogPost.Content,
+                FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                Heading = blogPost.Heading,
+                IsVisible = blogPost.IsVisible,
+                PageTitle = blogPost.PageTitle,
+                ShortDescription = blogPost.ShortDescription,
+                UrlHandle = blogPost?.UrlHandle,
+                Tags = blogPost?.Tags.Select(tag => new TagResponse() { Id = tag.Id, Name = tag.Name, DisplayName = tag.DisplayName }).ToList()
+            };
+
+            return blogPostResponse;
+        }
+
+        public async Task<BlogPostResponse> GetBlogPostByUrlHandle(string? urlHandle)
+        {
+            var blogPost = await this._blogCentralDBContext.BlogPosts.Include(blgPost => blgPost.Tags).FirstOrDefaultAsync(blogPost => blogPost.UrlHandle == urlHandle);
             var blogPostResponse = new BlogPostResponse()
             {
                 Id = blogPost.Id,
