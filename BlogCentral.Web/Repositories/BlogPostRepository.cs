@@ -2,6 +2,7 @@
 using BlogCentral.Web.Models.Domain;
 using BlogCentral.Web.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using Slugify;
 
 namespace BlogCentral.Web.Repositories
 {
@@ -9,11 +10,13 @@ namespace BlogCentral.Web.Repositories
     {
         private readonly BlogCentralDBContext _blogCentralDBContext;
         private readonly ITagRepository _tagRepository;
+        private SlugHelper _helper;
 
         public BlogPostRepository(BlogCentralDBContext blogCentralDBContext, ITagRepository tagRepository)
         {
             this._blogCentralDBContext = blogCentralDBContext;
             this._tagRepository = tagRepository;
+            this._helper = new SlugHelper();
         }
 
 
@@ -23,16 +26,18 @@ namespace BlogCentral.Web.Repositories
             var selectedTags = new List<Tag>();
             foreach (var tagId in blogPostRequest.SelectedTags)
             {
-                TagResponse tagFromDb = await this._tagRepository.GetByIdAsync(tagId);
-                if (tagFromDb != null)
+                //TagResponse tagFromDb = await this._tagRepository.GetByIdAsync(tagId);
+                //if (tagFromDb != null)
+                //{
+                var existingTag = await this._blogCentralDBContext.Tags.FindAsync(tagId);
+                if (existingTag != null)
                 {
-                    var existingTag = await this._blogCentralDBContext.Tags.FindAsync(tagFromDb.Id);
-                    if (existingTag != null)
-                    {
-                        selectedTags.Add(existingTag);
-                    }
+                    selectedTags.Add(existingTag);
                 }
+                //}
             }
+
+            
             BlogPost newBlogPost = new BlogPost()
             {
                 Heading = blogPostRequest.Heading,
@@ -42,7 +47,8 @@ namespace BlogCentral.Web.Repositories
                 IsVisible = blogPostRequest.IsVisible,
                 ShortDescription = blogPostRequest.ShortDescription,
                 PageTitle = blogPostRequest.PageTitle,
-                Tags = selectedTags
+                Tags = selectedTags,
+                UrlHandle = _helper.GenerateSlug(blogPostRequest.Heading)
             };
             this._blogCentralDBContext.BlogPosts.Add(newBlogPost);
             await this._blogCentralDBContext.SaveChangesAsync();
@@ -147,7 +153,7 @@ namespace BlogCentral.Web.Repositories
             existingBlogPost.IsVisible = blogPostUpdateRequest.IsVisible;
             existingBlogPost.PageTitle = blogPostUpdateRequest.PageTitle;
             existingBlogPost.ShortDescription = blogPostUpdateRequest.ShortDescription;
-            existingBlogPost.UrlHandle = blogPostUpdateRequest.UrlHandle;
+            existingBlogPost.UrlHandle = this._helper.GenerateSlug(blogPostUpdateRequest.Heading);
 
             // Clear existing tags and set the new tags
             existingBlogPost.Tags.Clear();

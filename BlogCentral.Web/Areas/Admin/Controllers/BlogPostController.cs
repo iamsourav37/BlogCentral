@@ -92,7 +92,6 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
                 IsVisible = blogPostResponse.IsVisible,
                 PageTitle = blogPostResponse.PageTitle,
                 ShortDescription = blogPostResponse.ShortDescription,
-                UrlHandle = blogPostResponse?.UrlHandle,
                 SelectedTags = blogPostResponse?.Tags.Select(tag => tag.Id),
                 AvailableTags = allTags.Select(tag => new SelectListItem
                 {
@@ -108,7 +107,7 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(BlogPostUpdateRequest blogPostUpdateRequest)
         {
 
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 var errors = ModelState.Values.SelectMany(v => v.Errors);
                 foreach (var error in errors)
@@ -131,7 +130,6 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
                     IsVisible = blogPostResponse.IsVisible,
                     PageTitle = blogPostResponse.PageTitle,
                     ShortDescription = blogPostResponse.ShortDescription,
-                    UrlHandle = blogPostResponse?.UrlHandle,
                     SelectedTags = blogPostResponse?.Tags.Select(tag => tag.Id),
                     AvailableTags = allTags.Select(tag => new SelectListItem
                     {
@@ -150,7 +148,7 @@ namespace BlogCentral.Web.Areas.Admin.Controllers
 
         public async Task<IActionResult> Delete(Guid? blogPostId)
         {
-            if(blogPostId == null)
+            if (blogPostId == null)
             {
                 return NotFound();
             }

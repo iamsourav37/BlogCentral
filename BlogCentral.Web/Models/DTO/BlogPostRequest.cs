@@ -18,10 +18,6 @@ namespace BlogCentral.Web.Models.DTO
 
         [Display(Name = "Featured Image Url")]
         public string? FeaturedImageUrl { get; set; }
-
-        [Display(Name = "Url Handle")]
-        public string? UrlHandle { get; set; }
-
         public string? Author { get; set; }
         public bool IsVisible { get; set; } = false;
 
